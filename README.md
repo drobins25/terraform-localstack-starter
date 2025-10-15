@@ -60,14 +60,14 @@ make tf-apply
 alias awsls='aws --endpoint-url=http://localhost:4566'
 ```
 
-# Verify
+### Verify
 ```
 awsls dynamodb list-tables
 awsls s3 ls
 awsls sqs list-queues
 ```
 
-# Tear down
+### Tear down
 ```
 make tf-destroy
 make down
@@ -245,11 +245,6 @@ pytest -q
 -------------------------------
 1. Replace the provider `aws` block to remove LocalStack endpoints and validation skips.
 2. Swap backend "local" for an S3 backend with DynamoDB state locking.
-3. Use AWS SSO (aws configure sso) or a named profile; then 'terraform init -migrate-state'.
-4. Consider IAM least-privilege policies, KMS encryption, and API auth.
-
-Share & Demo Tips
------------------
-- Record a tiny terminal demo (e.g., asciinema) showing: make up → apply → POST/GET → logs tail → S3 upload → S3_EVENT log.
-- Add shields.io badges (Terraform / LocalStack / License) to your README on Git.
-- Keep the repo minimal and runnable in under 5 minutes.
+3. Use AWS SSO (aws configure sso) or a named profile, then:
+   - `terraform init -migrate-state`.
+4. Update IAM least-privilege policies, KMS encryption, and API auth.
