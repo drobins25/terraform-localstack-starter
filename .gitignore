@@ -1,0 +1,45 @@
+# --- OS / Editor junk ---
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# --- Python / Tests ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+# project venvs
+tests/.venv/
+tests/.venv*/
+venv/
+.env
+*.env
+
+# --- Terraform ---
+.terraform/
+terraform.tfstate
+terraform.tfstate.*
+crash.log
+*.tfplan
+plan.bin
+plan.json
+
+# Keep the lockfile for reproducible provider versions:
+# (we DO commit this)
+#!.terraform.lock.hcl
+
+# --- LocalStack ---
+localstack/data/
+localstack/**/*.log
+
+# --- Lambda build artifacts ---
+lambda/*.zip
+out.json
+
+# --- Misc generated files ---
+*.log

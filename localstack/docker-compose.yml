@@ -1,0 +1,27 @@
+services:
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"
+      - "4510-4559:4510-4559"
+    environment:
+      - SERVICES=s3,dynamodb,sqs,sns,lambda,events,apigateway,ssm,secretsmanager,logs,cloudwatch,iam,sts
+      - AWS_DEFAULT_REGION=us-east-1
+      - LAMBDA_EXECUTOR=docker-reuse
+      - DEBUG=0
+    volumes:
+      - ./data:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  awscli:
+    image: amazon/aws-cli:latest
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-test}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-test}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
+      - AWS_PAGER=
+    entrypoint: [ "sh", "-lc" ]
+    command: >
+      aws --endpoint-url=http://localhost:4566 dynamodb list-tables || true && sleep infinity
+    depends_on:
+      - localstack
