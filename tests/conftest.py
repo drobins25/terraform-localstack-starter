@@ -65,3 +65,34 @@ def ddb_client():
         aws_secret_access_key=DUMMY_SECRET,
         endpoint_url=LOCALSTACK_URL,
     )
+
+def tf_output_raw(name: str) -> str:
+    return subprocess.check_output(
+        ["terraform", "-chdir=terraform", "output", "-raw", name],
+        text=True
+    ).strip()
+
+@pytest.fixture(scope="session")
+def ls_url():
+    return os.getenv("LOCALSTACK_URL", "http://localhost:4566")
+
+@pytest.fixture(scope="session")
+def table_name():
+    return tf_output_raw("dynamodb_table")
+
+@pytest.fixture(scope="session")
+def api_urls():
+    items_id_url = tf_output_raw("items_api_url")  # .../items/{id}
+    # strip "/{id}" to get the collection URL (zsh-safe)
+    items_url = items_id_url[:-5] if items_id_url.endswith("/{id}") else items_id_url
+    return {"items": items_url, "item_id_template": items_id_url}
+
+@pytest.fixture(scope="session")
+def ddb(ls_url):
+    return boto3.client(
+        "dynamodb",
+        region_name=REGION,
+        endpoint_url=ls_url,
+        aws_access_key_id="test",
+        aws_secret_access_key="test",
+    )
