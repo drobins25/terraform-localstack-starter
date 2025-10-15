@@ -50,7 +50,9 @@ cd localstack && docker compose up -d
 ```
 
 ### Provision infrastructure
+
 ```
+make tf-init
 make tf-apply
 ```
 
